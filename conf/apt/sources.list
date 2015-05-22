@@ -1,6 +1,8 @@
-# 
+#
 deb http://httpredir.debian.org/debian jessie main non-free contrib
 deb-src http://httpredir.debian.org/debian jessie main non-free contrib
+deb ftp://ftp.us.debian.org/debian jessie main non-free contrib
+deb-src ftp://ftp.us.debian.org/debian jessie main non-free contrib
 
 deb http://security.debian.org/ jessie/updates main contrib non-free
 deb-src http://security.debian.org/ jessie/updates main contrib non-free
@@ -8,7 +10,11 @@ deb-src http://security.debian.org/ jessie/updates main contrib non-free
 # jessie-updates, previously known as 'volatile'
 deb http://httpredir.debian.org/debian jessie-updates main contrib non-free
 deb-src http://httpredir.debian.org/debian jessie-updates main contrib non-free
+deb ftp://ftp.us.debian.org/debian jessie-updates main contrib non-free
+deb-src ftp://ftp.us.debian.org/debian jessie-updates main contrib non-free
 
 # jessie-backports, previously on backports.debian.org
 deb http://httpredir.debian.org/debian jessie-backports main contrib non-free
 deb-src http://httpredir.debian.org/debian jessie-backports main contrib non-free
+deb ftp://ftp.us.debian.org/debian jessie-backports main contrib non-free
+deb-src ftp://ftp.us.debian.org/debian jessie-backports main contrib non-free

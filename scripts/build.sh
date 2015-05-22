@@ -20,12 +20,22 @@ fi
 # Setup project environment.
 #
 echo "Setting Project Environment"; sleep 1
+printf "\n"
 
 # Project environment variables
 echo "Project Environment:"
 : ${PROJECT_PATH:="$(realpath $(dirname $(dirname $0)))"}
 echo -e "\tPROJECT_PATH => ${PROJECT_PATH}"
 export PROJECT_PATH
+printf "\n"
+
+# Apt cache enironment variables
+echo "Apt Cache Environment:"
+: ${APT_CACHE:="disabled"}
+echo -e "\tAPT_CACHE => ${APT_CACHE}"
+: ${APT_CACHE_ADDR:="http://172.17.42.1:3142"}
+echo -e "\tAPT_CACHE_ADDR => ${APT_CACHE_ADDR}"
+export APT_CACHE APT_CACHE_ADDR
 printf "\n"
 
 # Chroot environment variables
@@ -55,6 +65,15 @@ if nochroot ${CHROOT_DIST}; then
 	cd ${CHROOT_PATH}; mkdir -p ${PROJECT_PATH}/build
 	sudo tar -cpjvf ${PROJECT_PATH}/build/${CHROOT_DIST}.tar.bz2 *
 	echo "Done."
+fi
+
+#
+# Prepare an Apt-Cacher-Ng Proxy
+#
+if [[ "${APT_CACHE}" = "enabled" ]]; then
+	APT_CACHE_DOCKER="\"Acquire::HTTP::Proxy \\\\\"${APT_CACHE_ADDR}\\\\\";\""
+	APT_CACHE_DOCKER="RUN echo ${APT_CACHE_DOCKER} >> /etc/apt/apt.conf.d/01proxy"
+	export APT_CACHE_DOCKER
 fi
 
 #

@@ -3,6 +3,8 @@ ADD build/{{CHROOT_DIST}}.tar.bz2 /
 ADD conf/apt/sources.list /etc/apt/sources.list
 ADD conf/apt/emdebian.list /etc/apt/sources.list.d/emdebian.list
 
+{{APT_CACHE_DOCKER}}
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com \
@@ -11,4 +13,4 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com \
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y build-essential \
-	kernel-package debhelper qemu-user-static 
+	kernel-package debhelper qemu-user-static lzop

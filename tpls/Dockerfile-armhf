@@ -3,6 +3,8 @@ ADD build/{{CHROOT_DIST}}.tar.bz2 /
 ADD conf/apt/sources.list /etc/apt/sources.list
 ADD conf/apt/emdebian.list /etc/apt/sources.list.d/emdebian.list
 
+{{APT_CACHE_DOCKER}}
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com \
@@ -14,7 +16,7 @@ RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y crossbuild-essential-armhf \
 	build-essential kernel-package debhelper \
-	qemu-user-static
+	qemu-user-static lzop
 
 ENV CROSS_COMPILE arm-linux-gnueabihf-
 ENV ARCH arm
