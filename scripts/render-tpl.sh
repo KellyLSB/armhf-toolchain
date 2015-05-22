@@ -17,8 +17,11 @@ function parse()   {
 	done
 
 	if [[ -n $sed_cmd ]]; then
-		#echo "sed ${sed_cmd[@]} $1 > $2"
+		echo "sed ${sed_cmd[@]} $1 > $2"
 		eval "sed ${sed_cmd[@]} $1 > $2"
+  else
+    echo "Nothing to render... copying instead."
+    cp -v $1 $2
 	fi
 
 	sed_cmd= ; var= ; val= ;

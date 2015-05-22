@@ -25,6 +25,7 @@ echo "Setting Project Environment"; sleep 1
 echo "Project Environment:"
 : ${PROJECT_PATH:="$(realpath $(dirname $(dirname $0)))"}
 echo -e "\tPROJECT_PATH => ${PROJECT_PATH}"
+export PROJECT_PATH
 printf "\n"
 
 # Chroot environment variables
@@ -37,6 +38,7 @@ echo -e "\tCHROOT_DIST => ${CHROOT_DIST}"
 echo -e "\tCHROOT_PATH => ${CHROOT_PATH}"
 : ${CHROOT_REPO:="http://httpredir.debian.org/debian"}
 echo -e "\tCHROOT_REPO => ${CHROOT_REPO}"
+export CHROOT_ARCH CHROOT_DIST CHROOT_PATH CHROOT_REPO
 printf "\n"
 
 echo "Done"; sleep 2
@@ -44,14 +46,14 @@ echo "Done"; sleep 2
 #
 # Create chroot and bundle it up.
 #
-if nochroot $CHROOT_DIST; then
+if nochroot ${CHROOT_DIST}; then
 	echo "Creating Chroot"; sleep 1
-	sudo debootstrap $CHROOT_DIST $CHROOT_PATH $CHROOT_REPO
+	sudo debootstrap ${CHROOT_DIST} ${CHROOT_PATH} ${CHROOT_REPO}
 	echo "Done."; sleep 1
 
 	echo "Archiving up Chroot"; sleep 1;
-	cd $CHROOT_PATH; mkdir -p $PROJECT_PATH/build
-	sudo tar -cpjvf $PROJECT_PATH/build/${CHROOT_DIST}.tar.bz2 *
+	cd ${CHROOT_PATH}; mkdir -p ${PROJECT_PATH}/build
+	sudo tar -cpjvf ${PROJECT_PATH}/build/${CHROOT_DIST}.tar.bz2 *
 	echo "Done."
 fi
 
