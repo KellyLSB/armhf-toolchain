@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#
+# Environment Variables
 DEBOOTSTRAP_ARGS=()
 DEBOOTSTRAP_PKGS=(
   "sudo"
@@ -16,6 +18,9 @@ DEBOOTSTRAP_PKGS=(
 : ${DEBOOTSTRAP_REPO:="http://httpredir.debian.org/debian"}
 : ${DEBOOTSTRAP_ROOT:="$(mktemp -d)"}
 
+
+#
+# Get options
 function usage() {
 	cat <<-ENDHELP
   -r, --root      :: Chroot directory
@@ -35,8 +40,8 @@ function usage() {
 }
 
 getopt \
-	-o r:a:d:k:r:p:v:c:h \
-	--long root:,arch:,dist:,keyring:,repo:,pkgs:,variant:,cache:,help -- "$@"
+	-o r:a:d:k:r:p:v:c:h -Q \
+	-l root:,arch:,dist:,keyring:,repo:,pkgs:,variant:,cache:,help -- "$@"
 
 while true; do
 	case "$1" in

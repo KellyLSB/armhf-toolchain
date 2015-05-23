@@ -1,20 +1,12 @@
 #!/bin/bash
 
-function missing()  { ! sudo which $1 &>/dev/null; }
-function nochroot() { ! [[ -f build/$1.tar.bz2 ]]; }
 
-#
-# Install missing dependencies.
-#
-if missing debootstrap && missing realpath; then
-	echo "Updating Apt Sources"; sleep 1
-	sudo apt-get -qq update
-	echo "Done."; sleep 1
+$(dirname $0)/dependencies.sh \
+	-e debootstrap              \
+	-e realpath                 #
+	                            #
+  # \\\ Dependencies \\\\\\\\\#
 
-	echo "Installing Debootstrap and Realpath"; sleep 1
-	sudo apt-get -qq install -y debootstrap realpath bzip2 tar
-	echo "Done."; sleep 1
-fi
 
 #
 # Setup project environment.
@@ -54,10 +46,12 @@ printf "\n"
 
 echo "Done"; sleep 2
 
-#
-# Create chroot and bundle it up.
-#
-${PROJECT_PATH}/scripts/debootstrap.sh --cache ${PROJECT_PATH}/cache
+
+$(dirname $0)/debootstrap.sh 		\
+	--cache ${PROJECT_PATH}/cache #
+																#
+  # \\\ Debootstrap \\\\\\\\\\\\#
+
 
 #
 # Prepare an Apt-Cacher-Ng Proxy
