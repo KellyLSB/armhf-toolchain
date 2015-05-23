@@ -1,25 +1,48 @@
 FROM scratch
+MAINTAINER Kelly Lauren-Summer Becker-Neuding, Hexxed <kbecker@kellybecker.me>
+
 ADD cache/{{CHROOT_DIST}}.tar.bz2 /
 ADD conf/apt/sources.list /etc/apt/sources.list
 ADD conf/apt/emdebian.list /etc/apt/sources.list.d/emdebian.list
 
-{{APT_CACHE_DOCKER}}
-
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV DEBIAN_FRONTEND noninteractive
 
-ENV RPI_TOOLS /opt/rpi-tools
-ENV RPI_CHAIN gcc-linaro-arm-linux-gnueabihf-rasbian
+{{APT_CACHE_DOCKER}}
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com \
-		--recv-keys 7DE089671804772E
 
-RUN git clone https://github.com/raspberrypi/tools.git $RPI_TOOLS --depth 1
-ENV PATH $RPI_TOOLS/arm-bcm2708/$RPI_CHAIN/bin:$PATH
+RUN apt-key adv                    \
+  --keyserver keyserver.ubuntu.com \
+  --recv-keys                      \
+		7DE089671804772E  #  Emdebian  #
+                                   #
+    # \\\ APT-GPG Keys \\\\\\\\\\\\#
+
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y build-essential \
-	kernel-package debhelper qemu-user-static lzop
+RUN apt-get install -y \
+  qemu-user-static     \
+  build-essential      \
+  kernel-package       \
+  u-boot-tools         \
+  debhelper            \
+  lzop                 #
+                       #
+  # \\\ Packages \\\\\\#
+
+
+ENV RPI_TOOLS_PATH /opt/rpi-tools
+ENV RPI_TOOL_CHAIN gcc-linaro-arm-linux-gnueabihf-rasbian
+ENV PATH $RPI_TOOLS/arm-bcm2708/$RPI_CHAIN/bin:$PATH
+RUN git clone                              \
+  https://github.com/raspberrypi/tools.git \
+  $RPI_TOOLS                               \
+  --depth 1                                #
+                                           #
+  # \\\ Clone RPi Tools \\\\\\\\\\\\\\\\\\\#
+
+
 
 ENV CROSS_COMPILE arm-linux-gnueabihf-
 ENV ARCH arm

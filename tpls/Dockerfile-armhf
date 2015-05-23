@@ -1,22 +1,37 @@
 FROM scratch
+MAINTAINER Kelly Lauren-Summer Becker-Neuding, Hexxed <kbecker@kellybecker.me>
+
 ADD cache/{{CHROOT_DIST}}.tar.bz2 /
 ADD conf/apt/sources.list /etc/apt/sources.list
 ADD conf/apt/emdebian.list /etc/apt/sources.list.d/emdebian.list
 
-{{APT_CACHE_DOCKER}}
-
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com \
-		--recv-keys 7DE089671804772E
+{{APT_CACHE_DOCKER}}
 
-RUN dpkg --add-architecture armhf
+
+RUN apt-key adv                    \
+  --keyserver keyserver.ubuntu.com \
+  --recv-keys                      \
+		7DE089671804772E  #  Emdebian  #
+                                   #
+    # \\\ APT-GPG Keys \\\\\\\\\\\\#
+
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y crossbuild-essential-armhf \
-	build-essential kernel-package debhelper \
-	qemu-user-static lzop
+RUN apt-get install -y       \
+  crossbuild-essential-armhf \
+  qemu-user-static           \
+  build-essential            \
+  kernel-package             \
+  u-boot-tools               \
+  debhelper                  \
+  lzop                       #
+                             #
+  # \\\ Packages \\\\\\\\\\\\#
+
 
 ENV CROSS_COMPILE arm-linux-gnueabihf-
 ENV ARCH arm
