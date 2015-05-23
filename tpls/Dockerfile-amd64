@@ -1,5 +1,5 @@
 FROM scratch
-ADD build/{{CHROOT_DIST}}.tar.bz2 /
+ADD cache/{{CHROOT_DIST}}.tar.bz2 /
 ADD conf/apt/sources.list /etc/apt/sources.list
 ADD conf/apt/emdebian.list /etc/apt/sources.list.d/emdebian.list
 

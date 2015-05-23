@@ -48,6 +48,7 @@ echo -e "\tCHROOT_DIST => ${CHROOT_DIST}"
 echo -e "\tCHROOT_PATH => ${CHROOT_PATH}"
 : ${CHROOT_REPO:="http://httpredir.debian.org/debian"}
 echo -e "\tCHROOT_REPO => ${CHROOT_REPO}"
+: ${CHROOT_PKGS:="sudo,wget,curl,git,ca-certificates"}
 export CHROOT_ARCH CHROOT_DIST CHROOT_PATH CHROOT_REPO
 printf "\n"
 
@@ -56,24 +57,15 @@ echo "Done"; sleep 2
 #
 # Create chroot and bundle it up.
 #
-if nochroot ${CHROOT_DIST}; then
-	echo "Creating Chroot"; sleep 1
-	sudo debootstrap ${CHROOT_DIST} ${CHROOT_PATH} ${CHROOT_REPO}
-	echo "Done."; sleep 1
-
-	echo "Archiving up Chroot"; sleep 1;
-	cd ${CHROOT_PATH}; mkdir -p ${PROJECT_PATH}/build
-	sudo tar -cpjvf ${PROJECT_PATH}/build/${CHROOT_DIST}.tar.bz2 *
-	echo "Done."
-fi
+${PROJECT_PATH}/scripts/debootstrap.sh --cache ${PROJECT_PATH}/cache
 
 #
 # Prepare an Apt-Cacher-Ng Proxy
 #
+export APT_CACHE_DOCKER="RUN echo No apt caching enabled."
 if [[ "${APT_CACHE}" = "enabled" ]]; then
 	APT_CACHE_DOCKER="\"Acquire::HTTP::Proxy \\\\\"${APT_CACHE_ADDR}\\\\\";\""
 	APT_CACHE_DOCKER="RUN echo ${APT_CACHE_DOCKER} >> /etc/apt/apt.conf.d/01proxy"
-	export APT_CACHE_DOCKER
 fi
 
 #

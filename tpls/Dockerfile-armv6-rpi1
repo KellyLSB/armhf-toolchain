@@ -7,16 +7,19 @@ ADD conf/apt/emdebian.list /etc/apt/sources.list.d/emdebian.list
 
 ENV DEBIAN_FRONTEND noninteractive
 
+ENV RPI_TOOLS /opt/rpi-tools
+ENV RPI_CHAIN gcc-linaro-arm-linux-gnueabihf-rasbian
+
 RUN apt-key adv --keyserver keyserver.ubuntu.com \
 		--recv-keys 7DE089671804772E
 
-RUN dpkg --add-architecture armhf
+RUN git clone https://github.com/raspberrypi/tools.git $RPI_TOOLS --depth 1
+ENV PATH $RPI_TOOLS/arm-bcm2708/$RPI_CHAIN/bin:$PATH
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y crossbuild-essential-armhf \
-	build-essential kernel-package debhelper \
-	qemu-user-static lzop
+RUN apt-get install -y build-essential \
+	kernel-package debhelper qemu-user-static lzop
 
 ENV CROSS_COMPILE arm-linux-gnueabihf-
 ENV ARCH arm
